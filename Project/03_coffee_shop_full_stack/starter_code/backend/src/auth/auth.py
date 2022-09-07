@@ -37,14 +37,9 @@ def get_token_auth_header():
         auth_header = request.headers["Authorization"]
     except:
         raise AuthError({
-                'code': 'bad_request',
-                'description': 'Provide a valid token.'
-            }, 400)
-    # if not auth_header:
-    #     raise AuthError({
-    #             'code': 'invalid_token',
-    #             'description': 'The provided token is invalid.'
-    #         }, 401)
+                'code': 'invalid_token',
+                'description': 'The provided token is invalid.'
+            }, 401)
     if not(auth_header.startswith("Bearer ")):
         raise AuthError({
                 'code': 'invalid_token',
@@ -65,21 +60,16 @@ it should raise an AuthError if the requested permission string is not in the pa
 return true otherwise
 '''
 def check_permissions(payload, permission):
-    print("am in check permissions")
-    print("payload", payload)
     if 'permissions' not in payload:
-        print("in first if")
         raise AuthError({
                 'code': 'unauthorized',
                 'description': 'You can not access this resource or page.'
             }, 403)
     if permission not in payload['permissions']:
-        print("in second if")
         raise AuthError({
                 'code': 'unauthorized',
                 'description': 'You can not access this resource or page.'
             }, 403)
-    print("am returning true")
     return True
 
 '''
@@ -98,11 +88,9 @@ def verify_decode_jwt(token):
     # GET THE PUBLIC KEY FROM AUTH0
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
-    # print("jwks", jwks)
     
     # GET THE DATA IN THE HEADER
     unverified_header = jwt.get_unverified_header(token)
-    # print("unverified header", unverified_header)
     
     # CHOOSE OUR KEY
     rsa_key = {}
@@ -173,7 +161,6 @@ def requires_auth(permission):
             token = get_token_auth_header()
             try:
                 payload = verify_decode_jwt(token)
-                # print("payload", payload)
             except:
                 raise AuthError({
                 'code': 'invalid_token',

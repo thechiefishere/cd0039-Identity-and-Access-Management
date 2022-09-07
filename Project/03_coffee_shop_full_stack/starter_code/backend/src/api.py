@@ -90,7 +90,7 @@ def add_new_drink():
         
         return jsonify({
             "success": True,
-            "drinks": drink.long()
+            "drinks": [drink.long()]
         })
     except Exception as e:
         if isinstance(e, HTTPException):
@@ -111,7 +111,6 @@ returns status code 200 and json {"success": True, "drinks": drink} where drink 
 @app.route("/drinks/<int:id>", methods=["PATCH"])
 @requires_auth("patch:drinks")
 def update_drink(id):
-    print("am in update")
     body = request.get_json()
     if "title" not in body and "recipe" not in body:
         abort(400)
@@ -130,7 +129,7 @@ def update_drink(id):
         
         return jsonify({
             "success": True,
-            "drinks": drink.long()
+            "drinks": [drink.long()]
         })
     except Exception as e:
         if isinstance(e, HTTPException):
@@ -200,7 +199,7 @@ error handler should conform to general task above
 def not_found(error):
     return jsonify({
         "success": False,
-        "error": error,
+        "error": 404,
         "message": "resource not found"
     }), 404
 
